@@ -97,7 +97,7 @@ module.exports = {
                       let tempmsg = await author.send(new MessageEmbed()
                         .setColor(ee.color)
                         .setFooter(client.user.username, client.user.displayAvatarURL())
-                        .setAuthor(`Changed parameters...  |  Sending your Bot...`, "http://cdn.lowgif.com/full/2e71be55d791841c-animated-loading-bar-gif-transparent-background-www.gif")
+                        .setAuthor(`Changed parameters...  |  Sending your Bot...`, "https://www.bluechipexterminating.com/wp-content/uploads/2020/02/loading-gif-png-5.gif")
                       )
                       const srcDir = `./bots/waitingroombot/`;
                       const destDir = './waitingroombot.zip'

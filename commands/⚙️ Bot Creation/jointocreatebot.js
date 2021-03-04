@@ -5,13 +5,13 @@ const fse = require('fs-extra');
 const fs = require('fs');
 var archiver = require('archiver');
 module.exports = {
-    name: "waitingroombot",
+    name: "jointocreatebot",
     category: "⚙️ Bot Creation",
-    aliases: ["createwaitingroombot", "waitingroom", "createwaitingroom"],
+    aliases: ["createjointocreatebot", "jointocreate", "createjointocreate"],
     cooldown: 60*60,
-    usage: "waitingroombot",
-    description: "A Waitingroom Bot is perfect to setup for a **24/7 Radio** Channel or for an actual **Waitingroom**",
-    commands: ["help", "ping", "uptime", "changeradio", "join", "leave", "play", "rejoin", "setup"],
+    usage: "jointocreatebot",
+    description: "Every Server needs a Join to Create Bot, which creates **temporary Channels** which gets **deleted** once they turn **empty**",
+    commands: ["help", "ping", "uptime", "addchannel", "removechannel"],
     run: async (client, message, args, user, text, prefix) => {
     try{
       client.stats.inc(message.guild.id, "Bots")
@@ -74,17 +74,17 @@ module.exports = {
                     .setColor(ee.color)
                     .setFooter(ee.footertext, ee.footericon)
                     .setTitle(`You have 180 Seconds Time!\n\nPlease enter a Bot PREFIX!`)
-                    .setDescription(`You can always ping your Bot instead, but set a Default Prefix like: \`w!\`\n\n*A Prefix is the letter/thing which always stands infront of a Command!*`)
+                    .setDescription(`You can always ping your Bot instead, but set a Default Prefix like: \`j!\`\n\n*A Prefix is the letter/thing which always stands infront of a Command!*`)
                 ).then(msg=>{
                   msg.channel.awaitMessages(m=>m.author.id === author.id, { max: 1, time: 180000, errors: ['time'] })
                   .then(collected => {
                     prefix = collected.first().content;
-                    let waitingroomconfig = require("../../bots/waitingroombot/botconfig/config.json")
-                    let oldconfig = waitingroomconfig;
+                    let jointocreateconfig = require("../../bots/jointocreate/botconfig/config.json")
+                    let oldconfig = jointocreateconfig;
                     oldconfig.token = token;
                     oldconfig.prefix = prefix;
                     oldconfig.owner = owner;
-                    fs.writeFile("./bots/waitingroombot/botconfig/config.json", JSON.stringify(oldconfig, null, 3), async (e) => {
+                    fs.writeFile("./bots/jointocreate/botconfig/config.json", JSON.stringify(oldconfig, null, 3), async (e) => {
                       if (e) {
                         console.log(String(e.stack).red);
                         return author.send(new MessageEmbed()
@@ -99,8 +99,8 @@ module.exports = {
                         .setFooter(client.user.username, client.user.displayAvatarURL())
                         .setAuthor(`Changed parameters...  |  Sending your Bot...`, "http://cdn.lowgif.com/full/2e71be55d791841c-animated-loading-bar-gif-transparent-background-www.gif")
                       )
-                      const srcDir = `./bots/waitingroombot/`;
-                      const destDir = './waitingroombot.zip'
+                      const srcDir = `./bots/jointocreate/`;
+                      const destDir = './jointocreate.zip'
                       var output = fs.createWriteStream(destDir);
                       var archive = archiver('zip');
                       output.on('close', function () {
@@ -111,22 +111,22 @@ module.exports = {
                             .setColor(ee.color)
                             .setFooter(client.user.username, client.user.displayAvatarURL())
                             .setTitle(`How to use the Bot?`)
-                            .setDescription(`1. Download the ZIP file\n2. Extract the ZIP FILE into a FOLDER\n3. open a new TERMINAL(cmd/powershell) in this Directory!\n4. type: \`npm install\` to install all needed packages (discord.js @discordjs/opus ascii-table colors)\\n5. After that type \`node index.js\` and your Bot will start!\n\n\nNow invite your Bot to your Wished Server, and type \`${prefix}join\` Then your Bot will join your Channel and save it as the Waitingroom!\nYou can always resetup that with \`join\`  / \`setup\`\nYou can change the Radiostation by typing: \`${prefix}changeradio\`, but make sure that it's a valid mp3 Station Link!\n\nTo see all other available Commands type: \`${prefix}help\`\n*Note that this Bot only works in one guild at the time!*\n\nAlso you change the Embed Colors in \`/botconfig/embed.json\``)
+                            .setDescription(`1. Download the ZIP file\n2. Extract the ZIP FILE into a FOLDER\n3. open a new TERMINAL(cmd/powershell) in this Directory!\n4. type: \`npm install\` to install all needed packages (discord.js ascii-table colors)\n5. After that type \`node index.js\` and your Bot will start!\n\n\nNow invite your Bot to your Wished Server, and type \`${prefix}addchannel <ChannelID>\` to add a Voice Channel to a Join to Create Channel Setup!\nYou can have multiple Join to Create Channel Setups at Once\nTo remove one simply type: \`${prefix}removechannel <ChannelID>\`\n\nTo see all other available Commands type: \`${prefix}help\`\n*Note that this Bot only works in one guild at the time!*\n\nAlso you change the Embed Colors in \`/botconfig/embed.json\``)
                           )
                           setTimeout(()=>{
                             try {
                               fs.unlinkSync(destDir)
                             } catch(e) {
                             }
-                            oldconfig = waitingroomconfig;
+                            oldconfig = jointocreateconfig;
                             oldconfig.token = "";
                             oldconfig.prefix = "";
                             oldconfig.owner = "";
-                            fs.writeFile("./bots/waitingroombot/botconfig/config.json", JSON.stringify(oldconfig, null, 3), async (e) => {
+                            fs.writeFile("./bots/jointocreate/botconfig/config.json", JSON.stringify(oldconfig, null, 3), async (e) => {
                               if (e) {
-                                console.log("couldnt reset Waitingroombot")
+                                console.log("couldnt reset jointocreate")
                               }
-                              console.log("resetted Waitingroombot")
+                              console.log("resetted jointocreate")
                             })
                             return;
                           }, 1000)

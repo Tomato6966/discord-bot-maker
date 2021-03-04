@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageAttachment } = require("discord.js");
+const { MessageEmbed, MessageAttachment, Client } = require("discord.js");
 const config = require("../../botconfig/config.json");
 const ee = require("../../botconfig/embed.json");
 const fse = require('fs-extra');
@@ -8,9 +8,10 @@ module.exports = {
     name: "musicbot",
     category: "⚙️ Bot Creation",
     aliases: ["createmusicbot", "music", "createmusic"],
-    cooldown: 2,
+    cooldown: 60*60,
     usage: "musicbot",
-    description: "Creates you a Music Bot, using Distube",
+    description: "A Music Bot is essential to have an **active** Community in your Server. It uses **distube**",
+    commands: ["help", "ping", "uptime", "autoplay", "filter", "forward", "loop", "nowplaying", "pause", "play", "queue", "resume", "rewind", "search", "seek", "shuffle", "skip", "stop", "volume"],
     run: async (client, message, args, user, text, prefix) => {
     try{
       client.stats.inc(message.guild.id, "Bots")
@@ -53,13 +54,21 @@ module.exports = {
           .setDescription(`You have 180 Seconds Time!\n\nGo to: https://discord.com/developers \n**-->** Create an Application\n**-->** Create a Bot under the \`BOT\` - Tab\n**-->** Copy the Token and send it to me!\n\n***You can set Avatar, and Name and invite it to your Guild Later!***`)
       ).then(msg => {
         msg.channel.awaitMessages(m=>m.author.id === author.id, { max: 1, time: 180000, errors: ['time'] })
-      	.then(collected => {
+      	.then(async collected => {
             token = collected.first().content;
             if(token.length != "NzQ4MDg3OTA3NTE2MTUzODg5.X0YVJw.Wk6lEEwy158ZQ3wvKx3uvdnoWGA".length)
               return author.send(new MessageEmbed()
                 .setFooter(ee.footertext,ee.footericon)
                 .setColor(ee.wrongcolor)
                 .setTitle("That's not a valid Token! please retry")
+              )
+            let workingtoken = await checktoken(token);
+            if(!workingtoken)
+              return author.send(new MessageEmbed()
+                .setFooter(ee.footertext,ee.footericon)
+                .setColor(ee.wrongcolor)
+                .setTitle("That's not a valid Token! please retry")
+                .setDescription(`Tho the Length is right, the Token isn't working! I TESTED IT!`)
               )
                 author.send(
                   new MessageEmbed()
@@ -71,8 +80,8 @@ module.exports = {
                   msg.channel.awaitMessages(m=>m.author.id === author.id, { max: 1, time: 180000, errors: ['time'] })
                   .then(collected => {
                     prefix = collected.first().content;
-                    let waitingroomconfig = require("../../bots/musicbot/botconfig/config.json")
-                    let oldconfig = waitingroomconfig;
+                    let musicbotconfig = require("../../bots/musicbot/botconfig/config.json")
+                    let oldconfig = musicbotconfig;
                     oldconfig.token = token;
                     oldconfig.prefix = prefix;
                     oldconfig.owner = owner;
@@ -89,7 +98,7 @@ module.exports = {
                       let tempmsg = await author.send(new MessageEmbed()
                         .setColor(ee.color)
                         .setFooter(client.user.username, client.user.displayAvatarURL())
-                        .setTitle(`Changed parameters... Sending your Bot...`)
+                        .setAuthor(`Changed parameters...  |  Sending your Bot...`, "http://cdn.lowgif.com/full/2e71be55d791841c-animated-loading-bar-gif-transparent-background-www.gif")
                       )
                       const srcDir = `./bots/musicbot/`;
                       const destDir = './musicbot.zip'
@@ -103,14 +112,14 @@ module.exports = {
                             .setColor(ee.color)
                             .setFooter(client.user.username, client.user.displayAvatarURL())
                             .setTitle(`How to use the Bot?`)
-                            .setDescription(`1. Download the ZIP file\n2. Extract the ZIP FILE into a FOLDER\n3. open a new TERMINAL(cmd/powershell) in this Directory!\n4. type: \`npm install\` to install all needed packages (distube, @discordjs/opus, discord.js, ascii-table, ffmpeg-static, spotify-url-info)\n5. After that type \`node index.js\` and your Bot will start!\n\n\nNow invite your Bot to your Wished Server, and type \`${prefix}play <TRACK>\` Then your Bot will join your Channel and play Music!\n\n\n\nTo see all other available Commands type: \`${prefix}help\`\n\nAlso you change the Embed Colors in \`/botconfig/embed.json\`\n\nIf you want to use a YOUTUBE COOKIE, to prevent \`ERROR CODE: 429\` then change it in the music_settings in config.json ENJOY [Click here to see how to get a cookie](https://youtu.be/qymuvhBetnM)!`)
+                            .setDescription(`1. Download the ZIP file\n2. Extract the ZIP FILE into a FOLDER\n3. open a new TERMINAL(cmd/powershell) in this Directory!\n4. type: \`npm install\` to install all needed packages (distube @discordjs/opus discord.js colors ascii-table ffmpeg-static spotify-url-info)\n5. After that type \`node index.js\` and your Bot will start!\n\n\nNow invite your Bot to your Wished Server, and type \`${prefix}play <TRACK>\` Then your Bot will join your Channel and play Music!\n\n\n\nTo see all other available Commands type: \`${prefix}help\`\n\nAlso you change the Embed Colors in \`/botconfig/embed.json\`\n\nIf you want to use a YOUTUBE COOKIE, to prevent \`ERROR CODE: 429\` then change it in the music_settings in config.json ENJOY [Click here to see how to get a cookie](https://youtu.be/qymuvhBetnM)!`)
                           )
                           setTimeout(()=>{
                             try {
                               fs.unlinkSync(destDir)
                             } catch(e) {
                             }
-                            oldconfig = waitingroomconfig;
+                            oldconfig = musicbotconfig;
                             oldconfig.token = "";
                             oldconfig.prefix = "";
                             oldconfig.owner = "";
@@ -187,6 +196,17 @@ module.exports = {
             .setDescription(`\`\`\`${e.message}\`\`\``)
         );
     }
+  }
+}
+async function checktoken(token){
+  let testclient = new Client();
+  try{
+    await testclient.login(token)
+    testclient.on("ready", () => testclient.destroy() )
+    return true;
+  } catch {
+    console.log("INVALID TOKEN")
+    return false;
   }
 }
 /**

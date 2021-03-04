@@ -6,7 +6,7 @@ const fs = require("fs")
 module.exports = {
     name: "setup",
     category: "Voice",
-    aliases: [""],
+    aliases: ["resetup"],
     cooldown: 2,
     usage: "setup",
     description: "Joins your Channel and set the Radio to that!",

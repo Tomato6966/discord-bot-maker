@@ -6,7 +6,7 @@ const fs = require("fs")
 module.exports = {
     name: "rejoin",
     category: "Voice",
-    aliases: [""],
+    aliases: ["reconnect"],
     cooldown: 2,
     usage: "rejoin",
     description: "Rejoins the Setupped Channel",

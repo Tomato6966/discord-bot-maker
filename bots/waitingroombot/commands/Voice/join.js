@@ -6,7 +6,7 @@ const fs = require("fs")
 module.exports = {
     name: "join",
     category: "Voice",
-    aliases: [""],
+    aliases: ["connect"],
     cooldown: 2,
     usage: "join",
     description: "Joins your Channel and set the Radio to that!",

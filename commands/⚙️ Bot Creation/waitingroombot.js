@@ -34,18 +34,19 @@ module.exports = {
         .setURL(approvalmsg.url)
         .setTitle(`Check your \`direct messages\` for the Creation!`)
       )
+      let error = false;
       await approvalmsg.awaitReactions((reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id, { max: 1, time: 60000, errors: ['time'] })
     	.then(collected => console.log(`APPROVED: ${message.author.tag}`))
     	.catch(e => {
         console.log(String(e.stack).bgRed)
-        return message.author.send(new MessageEmbed()
+        message.author.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | CANCELLED, you didnt reacted in time!`)
-            .setDescription(`\`\`\`${e.message}\`\`\``)
         );
+        error = true;
     	});
-
+      if(error) return;
       let token, prefix,  owner = message.author.id, author = message.author;
       author.send(
         new MessageEmbed()
@@ -58,14 +59,14 @@ module.exports = {
         .then(async collected => {
             token = collected.first().content;
             if(token.length != "NzQ4MDg3OTA3NTE2MTUzODg5.X0YVJw.Wk6lEEwy158ZQ3wvKx3uvdnoWGA".length)
-              return author.send(new MessageEmbed()
+              author.send(new MessageEmbed()
                 .setFooter(ee.footertext,ee.footericon)
                 .setColor(ee.wrongcolor)
                 .setTitle("That's not a valid Token! please retry")
               )
             let workingtoken = await checktoken(token);
             if(!workingtoken)
-              return author.send(new MessageEmbed()
+              author.send(new MessageEmbed()
                 .setFooter(ee.footertext,ee.footericon)
                 .setColor(ee.wrongcolor)
                 .setTitle("That's not a valid Token! please retry")
@@ -89,7 +90,7 @@ module.exports = {
                     fs.writeFile("./bots/waitingroombot/botconfig/config.json", JSON.stringify(oldconfig, null, 3), async (e) => {
                       if (e) {
                         console.log(String(e.stack).red);
-                        return author.send(new MessageEmbed()
+                        author.send(new MessageEmbed()
                           .setFooter(ee.footertext,ee.footericon)
                           .setColor(ee.wrongcolor)
                           .setTitle("❌ ERROR Writing the File")
@@ -136,7 +137,7 @@ module.exports = {
                       });
                       archive.on('error', function(e){
                         console.log(String(e.stack).red);
-                        return author.send(new MessageEmbed()
+                        author.send(new MessageEmbed()
                           .setFooter(ee.footertext,ee.footericon)
                           .setColor(ee.wrongcolor)
                           .setTitle("❌ ERROR Creating Zip")
@@ -152,7 +153,7 @@ module.exports = {
                     })
                   }).catch(e => {
                     console.log(String(e.stack).bgRed)
-                    return author.send(new MessageEmbed()
+                    author.send(new MessageEmbed()
                         .setColor(ee.wrongcolor)
                         .setFooter(ee.footertext, ee.footericon)
                         .setTitle(`❌ ERROR | An error occurred`)
@@ -161,7 +162,7 @@ module.exports = {
                   })
                 }).catch(e => {
                   console.log(String(e.stack).bgRed)
-                  return author.send(new MessageEmbed()
+                  author.send(new MessageEmbed()
                       .setColor(ee.wrongcolor)
                       .setFooter(ee.footertext, ee.footericon)
                       .setTitle(`❌ ERROR | An error occurred`)
@@ -171,13 +172,15 @@ module.exports = {
               })
         .catch(e => {
               console.log(String(e.stack).bgRed)
-              return author.send(new MessageEmbed()
+              author.send(new MessageEmbed()
                   .setColor(ee.wrongcolor)
                   .setFooter(ee.footertext, ee.footericon)
                   .setTitle(`❌ ERROR | An error occurred`)
                   .setDescription(`\`\`\`${e.message}\`\`\``)
               );
-            })
+              error = true;
+            });
+            if(error) return;
       }).catch(e => {
                 console.log(String(e.stack).bgRed)
                 return message.channel.send(new MessageEmbed()
@@ -186,7 +189,9 @@ module.exports = {
                     .setTitle(`❌ ERROR | An error occurred`)
                     .setDescription(`\`\`\`${e.message}\`\`\`*Please enable your DMS*`)
                 );
-              })
+                error = true;
+              });
+              if(error) return;
 
     } catch (e) {
         console.log(String(e.stack).bgRed)

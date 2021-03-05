@@ -8,7 +8,7 @@ module.exports = {
     name: "musicbot",
     category: "⚙️ Bot Creation",
     aliases: ["createmusicbot", "music", "createmusic"],
-    cooldown: 60*60,
+    cooldown: 60,
     usage: "musicbot",
     description: "A Music Bot is essential to have an **active** Community in your Server. It uses **distube**",
     commands: ["help", "ping", "uptime", "autoplay", "filter", "forward", "loop", "nowplaying", "pause", "play", "queue", "resume", "rewind", "search", "seek", "shuffle", "skip", "stop", "volume"],
@@ -16,6 +16,8 @@ module.exports = {
     try{
       client.stats.inc(message.guild.id, "Bots")
       client.stats.inc("global", "Bots")
+      client.stats.inc(message.guild.id, "musicbot")
+      client.stats.inc("global", "musicbot")
       client.stats.inc(message.guild.id, "commands")
       client.stats.inc("global", "commands")
 
@@ -37,7 +39,7 @@ module.exports = {
       .then(collected => console.log(`APPROVED: ${message.author.tag}`))
       .catch(e => {
         console.log(String(e.stack).bgRed)
-        return author.send(new MessageEmbed()
+        return message.author.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | CANCELLED, you didnt reacted in time!`)

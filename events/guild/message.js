@@ -10,9 +10,13 @@ const { escapeRegex} = require("../../handlers/functions"); //Loading all needed
 module.exports = async (client, message) => {
   try {
     client.stats.ensure("global", {
-      commands: 0,
-      Bots: 0,
-      messages: 0,
+        commands: 0,
+        Bots: 0,
+        messages: 0,
+        waitingroombot: 0,
+        jointocreatebot: 0,
+        discordjshandler: 0,
+        musicbot: 0
     })
     //if the message is not in a guild (aka in dms), return aka ignore the inputs
     if (!message.guild) return;
@@ -20,6 +24,10 @@ module.exports = async (client, message) => {
       commands: 0,
       Bots: 0,
       messages: 0,
+      waitingroombot: 0,
+      jointocreatebot: 0,
+      discordjshandler: 0,
+      musicbot: 0
     })
     client.settings.ensure(message.guild.id, {
       prefix: config.prefix

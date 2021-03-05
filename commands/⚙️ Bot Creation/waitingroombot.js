@@ -8,7 +8,7 @@ module.exports = {
     name: "waitingroombot",
     category: "⚙️ Bot Creation",
     aliases: ["createwaitingroombot", "waitingroom", "createwaitingroom"],
-    cooldown: 60*60,
+    cooldown: 60,
     usage: "waitingroombot",
     description: "A Waitingroom Bot is perfect to setup for a **24/7 Radio** Channel or for an actual **Waitingroom**",
     commands: ["help", "ping", "uptime", "changeradio", "join", "leave", "play", "rejoin", "setup"],
@@ -16,6 +16,8 @@ module.exports = {
     try{
       client.stats.inc(message.guild.id, "Bots")
       client.stats.inc("global", "Bots")
+      client.stats.inc(message.guild.id, "waitingroombot")
+      client.stats.inc("global", "waitingroombot")
       client.stats.inc(message.guild.id, "commands")
       client.stats.inc("global", "commands")
       let approvalmsg = await message.author.send(new MessageEmbed()
@@ -36,7 +38,7 @@ module.exports = {
     	.then(collected => console.log(`APPROVED: ${message.author.tag}`))
     	.catch(e => {
         console.log(String(e.stack).bgRed)
-        return author.send(new MessageEmbed()
+        return message.author.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | CANCELLED, you didnt reacted in time!`)

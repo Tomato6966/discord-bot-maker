@@ -8,7 +8,7 @@ module.exports = {
     name: "discordjshandler",
     category: "⚙️ Bot Creation",
     aliases: ["creatediscordjshandler", "discordjshandler", "creatediscordjshandler", "djshandler", "handler", "template"],
-    cooldown: 60*60,
+    cooldown: 60,
     usage: "discordjshandler",
     description: "The **Perfect Template** for a Discord.js Bot! **With automatic Help Command**",
     commands: ["help", "ping", "uptime", "say", "embed"],
@@ -16,6 +16,8 @@ module.exports = {
     try{
       client.stats.inc(message.guild.id, "Bots")
       client.stats.inc("global", "Bots")
+      client.stats.inc(message.guild.id, "discordjshandler")
+      client.stats.inc("global", "discordjshandler")
       client.stats.inc(message.guild.id, "commands")
       client.stats.inc("global", "commands")
       let approvalmsg = await message.author.send(new MessageEmbed()
@@ -36,7 +38,7 @@ module.exports = {
     	.then(collected => console.log(`APPROVED: ${message.author.tag}`))
     	.catch(e => {
         console.log(String(e.stack).bgRed)
-        return author.send(new MessageEmbed()
+        return message.author.send(new MessageEmbed()
             .setColor(ee.wrongcolor)
             .setFooter(ee.footertext, ee.footericon)
             .setTitle(`❌ ERROR | CANCELLED, you didnt reacted in time!`)

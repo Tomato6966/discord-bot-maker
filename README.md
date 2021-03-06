@@ -4,7 +4,7 @@
 
 [This is the official Source Code of the Public Bot called "DISCORD BOT MAKER#9428"](https://discordbotmaker.milrato.eu) so if you consider to use the source code than please make sure to support [Milrato Development](https://milrato.eu) by [Inviting](https://discordbotmaker.milrato.eu) this Bot!
 
-[** DISCORD SUPPORT SERVER INVITE**](https://support.milrato.eu)
+[**DISCORD SUPPORT SERVER INVITE**](https://support.milrato.eu)
 
 ## BEST HOSTING | Bittmax.de
 BITTMAX Quality is their solution.
